@@ -1,7 +1,7 @@
 import { Server } from "http"
 import mongoose from "mongoose";
 import app from "./app";
-import { error } from "console";
+
 
 let server: Server;
 
