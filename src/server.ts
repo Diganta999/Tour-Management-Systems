@@ -1,7 +1,8 @@
+
 import { Server } from "http"
 import mongoose from "mongoose";
 import app from "./app";
-import { error } from "console";
+
 
 let server: Server;
 
@@ -21,8 +22,26 @@ const startServer = async () => {
 
 startServer()
 
+process.on("SIGINT",()=>{
+     console.log("SIGINT signal caught ! Server Shouting down .......... ")
+     if(server){
+        server.close(()=>{
+            process.exit(1)
+        })
+     }
+     process.exit(1)
+})
 process.on("unhandledRejection",(err)=>{
      console.log("Unhandle rejection caught ! Server Shouting down .......... Error is ", err)
+     if(server){
+        server.close(()=>{
+            process.exit(1)
+        })
+     }
+     process.exit(1)
+})
+process.on("uncaughtException",(err)=>{
+     console.log("Uncaught Exception caught ! Server Shouting down .......... Error is ", err)
      if(server){
         server.close(()=>{
             process.exit(1)
