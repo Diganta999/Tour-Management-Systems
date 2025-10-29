@@ -26,7 +26,7 @@ export interface IUser {
     isActive?:IsActive;
     isVerified?:string;
     role:Role;
-    auths:IAuthProvider;
+    auths:IAuthProvider[];
     booking?:Types.ObjectId[];
     guides?:Types.ObjectId[];
 }
