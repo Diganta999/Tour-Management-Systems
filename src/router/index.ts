@@ -7,6 +7,8 @@ const moduleRoutes = [
     {
         path:"/user",
         route:UserRoutes
+    },{
+        path:"/tour"
     }
 ]
 
