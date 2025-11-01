@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes"
 import { UserServices } from "./user.service";
 
+
 const createUserController =async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const user =UserServices.createUserService(req.body)
@@ -18,6 +19,18 @@ const createUserController =async(req:Request,res:Response,next:NextFunction)=>{
     }
 }
 
+const getAllUsersController = async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const allUsers = await UserServices.getAllUsersService();
+        res.status(httpStatus.OK).json({
+            allUsers
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const userController ={
-    createUserController 
+    createUserController ,
+    getAllUsersController
 }

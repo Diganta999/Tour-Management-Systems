@@ -6,7 +6,13 @@ const user = await User.create(payload)
  return user
 }
 
+const getAllUsersService=async()=>{
+    const users = await User.find({})
+    return users;
+}
+
 
 export const UserServices = {
-    createUserService
+    createUserService,
+    getAllUsersService
 }
