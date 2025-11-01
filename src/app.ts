@@ -1,8 +1,10 @@
 import express, { Request, Response } from "express"
 import cors from "cors"
-import { router } from "./router"
-import { globalErrorHandler } from "./middleware/globalErrorHandler"
-import notFound from "./middleware/notFound"
+import { router } from "./app/router"
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler"
+import notFound from "./app/middleware/notFound"
+
+
 const app = express()
 app.use(express.json())
 app.use(cors())
