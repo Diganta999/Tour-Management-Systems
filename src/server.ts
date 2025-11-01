@@ -5,6 +5,8 @@ import app from "./app";
 import { envVars } from "./app/config/env";
 
 
+
+
 let server: Server;
 
 const startServer = async () => {

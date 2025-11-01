@@ -1,36 +1,38 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status-codes"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { Request, Response, NextFunction } from "express";
+import httpStatus from "http-status-codes";
 import { UserServices } from "./user.service";
+import { catchAsync } from "../../utils/catchAsync";
 
+/**
+ * 🧩 Controller: Create User
+ */
+const createUserController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  // Always await async service functions
+  const user = await UserServices.createUserService(req.body);
 
-const createUserController =async(req:Request,res:Response,next:NextFunction)=>{
-    try {
-        const user =UserServices.createUserService(req.body)
-        
-        res.status(httpStatus.CREATED).json({
-            message:"user create successfully",
-            user
-        })
+  res.status(httpStatus.CREATED).json({
+    success: true,
+    message: "User created successfully",
+    data: user,
+  });
+});
 
-    } catch (error :any) {
-        console.log(error)
-        next(error)
-    }
-}
+/**
+ * 🧩 Controller: Get All Users
+ */
+const getAllUsersController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const allUsers = await UserServices.getAllUsersService();
 
-const getAllUsersController = async(req:Request,res:Response,next:NextFunction)=>{
-    try {
-        const allUsers = await UserServices.getAllUsersService();
-        res.status(httpStatus.OK).json({
-            allUsers
-        })
-    } catch (error) {
-        next(error)
-    }
-}
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "All users fetched successfully",
+    data: allUsers,
+  });
+});
 
-export const userController ={
-    createUserController ,
-    getAllUsersController
-}
+export const userController = {
+  createUserController,
+  getAllUsersController,
+};
