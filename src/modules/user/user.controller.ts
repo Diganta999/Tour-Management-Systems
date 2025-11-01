@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes"
 import { UserServices } from "./user.service";
+import { success } from "zod";
 
 const createUserController =async(req:Request,res:Response,next:NextFunction)=>{
     try {
@@ -18,6 +19,18 @@ const createUserController =async(req:Request,res:Response,next:NextFunction)=>{
     }
 }
 
+const getAllUsersController = async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const allUsers = await UserServices.getAllUsersService();
+        res.status(httpStatus.ACCEPTED).json({
+            allUsers
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const userController ={
-    createUserController 
+    createUserController ,
+    getAllUsersController
 }
