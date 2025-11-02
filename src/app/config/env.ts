@@ -6,11 +6,14 @@ interface EnvConfig  {
   PORT :string,
   DB_URL:string,
   NODE_ENV:string
+  JWT_ACCESS_EXPIRES:string,
+  JWT_ACCESS_SECRET:string,
+  SLOT_ROUND:string
 }
 
  const loadEnvVariables = ():EnvConfig=>{
 
-    const requiredEnvVariables:string[]= ["PORT","DB_URL","NODE_ENV"];
+    const requiredEnvVariables:string[]= ["PORT","DB_URL","NODE_ENV","SLOT_ROUND","JWT_ACCESS_SECRET","JWT_ACCESS_EXPIRES"];
     requiredEnvVariables.forEach(key=>{
         if(!process.env[key]){
             throw new Error(`Missing require environment variable ${key}`)
@@ -19,7 +22,10 @@ interface EnvConfig  {
  return {
     PORT:process.env.PORT as string,
     DB_URL:process.env.DB_URL as string,
-    NODE_ENV:process.env.NODE_ENV as string
+    NODE_ENV:process.env.NODE_ENV as string,
+    SLOT_ROUND:process.env.SLOT_ROUND as string,
+    JWT_ACCESS_SECRET:process.env.JWT_ACCESS_SECRET as string,
+    JWT_ACCESS_EXPIRES:process.env.JWT_ACCESS_EXPIRES as string
  }
 }
 
