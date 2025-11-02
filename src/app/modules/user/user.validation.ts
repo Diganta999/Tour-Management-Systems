@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { IsActive, Role } from "./user.interface";
 
 const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -32,4 +33,42 @@ export const createUserZodSchema = z.object({
     .optional(),
 
   address: z.string().optional(),
+});
+
+
+
+export const UpdateUserZodSchema = z.object({
+  name: z.string().min(2).max(50).optional(),
+  
+  password: z
+    .string()
+    .min(8)
+    .max(50)
+    .regex(passwordRegex, {
+      message: "Must contain at least 1 uppercase, 1 number, and 1 special character",
+    })
+    .optional(),
+
+  phone: z.string().regex(bdPhoneRegex, {
+    message: "Must be a valid Bangladeshi phone number",
+  }).optional(),
+
+  picture: z.string().optional(),
+  address: z.string().optional(),
+  isDeleted: z.boolean().optional(),
+  isActive: z.enum(Object.values(IsActive) as [string]).optional(),
+  isVerified: z.boolean().optional(),
+  role: z.enum(Object.values(Role) as [string]).optional(),
+
+  auths: z
+    .array(
+      z.object({
+        provider: z.string(),
+        providerId: z.string(),
+      })
+    )
+    .optional(),
+
+  bookings: z.array(z.string()).optional(),
+  guides: z.array(z.string()).optional(),
 });
