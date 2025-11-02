@@ -8,7 +8,13 @@ const user = await User.create(payload)
 
 const getAllUsersService=async()=>{
     const users = await User.find({})
-    return users;
+    const total= await User.countDocuments()
+    return {
+        data:users,
+        meta:{
+            total:total
+        }
+    }
 }
 
 
