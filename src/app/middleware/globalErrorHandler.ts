@@ -22,6 +22,6 @@ export const globalErrorHandler = async(err:any,req:Request,res:Response,next:Ne
         success:false,
         message,
         err,
-        stack:envVars.NODE_ENV==="development" ? err.stack : null
+        stack:envVars.NODE_ENV==="DEVELOPMENT" ? err.stack : null
     }) 
 }
