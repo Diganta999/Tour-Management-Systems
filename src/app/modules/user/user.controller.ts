@@ -28,10 +28,9 @@ const createUserController = catchAsync(async (req: Request, res: Response, next
 
 const updateUserController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.params.id;
-  const token = req.headers.authorization;
-  const tokenVerify = verifyToken(token as string, envVars.JWT_ACCESS_SECRET)
+  const token = req.user;
   const payload = req.body;
-  const user = await UserServices.updateUserService(userId, payload, tokenVerify as JwtPayload)
+  const user = await UserServices.updateUserService(userId, payload, token as JwtPayload)
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
