@@ -18,7 +18,7 @@ export const checkAuth = (...AuthRole: string[]) => async (req: Request, res: Re
         if(!AuthRole.includes(tokenVerify.role)){
             throw new AppError(statusCode.BAD_REQUEST,"you have not permit to this route !!!!!!!!!!!")
         }
-
+         req.user=tokenVerify;
         next()
     } catch (error) {
         next(error)
