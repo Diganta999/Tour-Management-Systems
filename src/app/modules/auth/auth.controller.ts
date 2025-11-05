@@ -14,7 +14,19 @@ const authLoginController = catchAsync(async(req:Request,res:Response,next:NextF
         data:user
     })
 })
+const getNewAccessToken = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    // const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.headers.authorization;
+    const tokenInfo = await AuthService.getNewAccessToken(refreshToken as string)
+    sendResponse(res,{
+        statusCode:statusCode.OK,
+        message:"token generate successfully",
+        success:true,
+        data:tokenInfo
+    })
+})
 
  export const AuthController ={
-    authLoginController
+    authLoginController,
+    getNewAccessToken
 }
