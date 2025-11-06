@@ -28,13 +28,44 @@ const getNewAccessToken = catchAsync(async(req:Request,res:Response,next:NextFun
     setAuthCookie(res,tokenInfo)
     sendResponse(res,{
         statusCode:statusCode.OK, 
-        message:"token generate successfully",
+        message:"refreshToken generate successfully",
         success:true,
         data:tokenInfo
+    })
+})
+const logoutController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+   res.clearCookie("accessToken",{
+    httpOnly:true,
+    secure:false,
+    sameSite:"lax"
+   })
+   res.clearCookie("refreshToken",{
+    httpOnly:true,
+    secure:false,
+    sameSite:"lax"
+   })
+    sendResponse(res,{
+        statusCode:statusCode.OK, 
+        message:"logout successfully",
+        success:true,
+        data:null
+    })
+})
+const resetPasswordController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    const {oldPassword,newPassword}=req.body;
+    const decodedToken= req.user;
+   const user = await AuthService.resetPasswordService(decodedToken,oldPassword,newPassword)
+    sendResponse(res,{
+        statusCode:statusCode.OK, 
+        message:"logout successfully",
+        success:true,
+        data:null
     })
 })
 
  export const AuthController ={
     authLoginController,
-    getNewAccessToken
+    getNewAccessToken,
+    logoutController,
+    resetPasswordController
 }
