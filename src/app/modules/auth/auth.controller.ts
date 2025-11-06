@@ -6,6 +6,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import statusCode from "http-status-codes"
 import AppError from "../../errorHelpers/AppError";
 import { setAuthCookie } from "../../utils/setCookie";
+import { JwtPayload } from "jsonwebtoken";
 
 const authLoginController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const user = await AuthService.authLoginService(req.body)
@@ -54,10 +55,10 @@ const logoutController = catchAsync(async(req:Request,res:Response,next:NextFunc
 const resetPasswordController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const {oldPassword,newPassword}=req.body;
     const decodedToken= req.user;
-   const user = await AuthService.resetPasswordService(decodedToken,oldPassword,newPassword)
+   const user = await AuthService.resetPasswordService(decodedToken as JwtPayload,oldPassword,newPassword)
     sendResponse(res,{
         statusCode:statusCode.OK, 
-        message:"logout successfully",
+        message:"password reset successfully",
         success:true,
         data:null
     })
