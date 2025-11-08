@@ -7,6 +7,8 @@ import statusCode from "http-status-codes"
 import AppError from "../../errorHelpers/AppError";
 import { setAuthCookie } from "../../utils/setCookie";
 import { JwtPayload } from "jsonwebtoken";
+import { createUserToken } from "../../utils/userTokens";
+import { envVars } from "../../config/env";
 
 const authLoginController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const user = await AuthService.authLoginService(req.body)
@@ -63,10 +65,31 @@ const resetPasswordController = catchAsync(async(req:Request,res:Response,next:N
         data:null
     })
 })
+const googleCallBackController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+     let redirectTo = req.query.state ? req.query.state as string : ""
+
+    if (redirectTo.startsWith("/")) {
+        redirectTo = redirectTo.slice(1)
+    }
+
+    
+    const user = req.user;
+
+    if (!user) {
+        throw new AppError(statusCode.NOT_FOUND, "User Not Found")
+    }
+
+    const tokenInfo =await createUserToken(user)
+
+   await setAuthCookie(res, tokenInfo)
+
+
+    res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
+})
 
  export const AuthController ={
     authLoginController,
     getNewAccessToken,
     logoutController,
-    resetPasswordController
+    resetPasswordController,googleCallBackController
 }
