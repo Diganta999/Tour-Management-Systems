@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
@@ -9,18 +10,34 @@ import { setAuthCookie } from "../../utils/setCookie";
 import { JwtPayload } from "jsonwebtoken";
 import { createUserToken } from "../../utils/userTokens";
 import { envVars } from "../../config/env";
+import passport from "passport";
+import { IUser } from "../user/user.interface";
 
 const authLoginController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
-    const user = await AuthService.authLoginService(req.body)
-    
-    setAuthCookie(res,user)
-    
-    sendResponse(res,{
+    // const user = await AuthService.authLoginService(req.body)
+
+    passport.authenticate("local",async(err:any,user:any,info:any)=>{
+        if(err){
+          return next(err)
+        }
+      const createToken= await createUserToken(user)
+      const {password:pass,...rest}=user.toObject()
+      setAuthCookie(res,createToken)
+         sendResponse(res,{
         statusCode:statusCode.OK,
         message:"Login successfully",
         success:true,
-        data:user
+        data:{
+            accessToken:createToken.accessToken,
+            refreshToken:createToken.refreshToken,
+            user:rest
+        }
     })
+    })(req,res,next)
+    
+    
+    
+   
 })
 const getNewAccessToken = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const refreshToken = req.cookies.refreshToken;
