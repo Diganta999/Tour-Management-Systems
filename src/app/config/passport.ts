@@ -26,7 +26,7 @@ passport.use(new GoogleStrategy({
                     name:profile.displayName,
                     picture:profile.photos?.[0].value,
                     role:Role.USER,
-                    isVerified:true,
+                    isVerified:true, 
                     auths:[
                         {
                             provider:"google",
@@ -35,6 +35,7 @@ passport.use(new GoogleStrategy({
                     ]
                 })
             }
+            
 
             return done(null,user)
         } catch (error) {
@@ -60,36 +61,57 @@ passport.deserializeUser(async (id: string, done: any) => {
 
 // Credential Login 
 
-passport.use(new LocalStrategy({
-    usernameField:"email",
-    passwordField:"password"
-},async(email:string,passport:string,done :any)=>{
-       try {
-        const isUserExist = await User.findOne({email})
-        if(!isUserExist){
-            done(null,false,{message:"User not exist"})
-        }
-        if(isUserExist?.isDeleted ){
-            done(null ,false,{message:"user is  Deleted"})
-        }
-        if( isUserExist?.isActive===IsActive.INACTIVE ){
-            done(null,false,{message:"user is inactive"})
-        }
-        if(isUserExist?.isActive===IsActive.BLOCKED){
-            done(null,false,{message:"user is blocked"})
-        }
-        const isGoogleAuthenticate= isUserExist?.auths.some(providerObject=>providerObject.provider==="google");
-        if(isGoogleAuthenticate){
-            return done(null, false, { message: "You have authenticated through Google. So if you want to login with credentials, then at first login with google and set a password for your Gmail and then you can login with email and password." })
-        }
-        const isPasswordMatch= await bcryptJs.compare(passport as string,isUserExist?.password as string)
-         if(!isPasswordMatch){
-            done(null,false,{message:"Password is incorrect"})
-         }
-         return done(null,isUserExist)
-       } catch (error) {
-        console.log(error)
-        done(error)
-       }
-}))
+passport.use(new LocalStrategy(
+  {
+    usernameField: "email",
+    passwordField: "password",
+  },
+  async (email: string, password: string, done: any) => {
+    try {
+      const isUserExist = await User.findOne({ email });
+
+      if (!isUserExist) {
+        return done(null, false, { message: "User not exist" });
+      }
+
+      if (isUserExist.isDeleted) {
+        return done(null, false, { message: "User is deleted" });
+      }
+
+      if (isUserExist.isActive === IsActive.INACTIVE) {
+        return done(null, false, { message: "User is inactive" });
+      }
+
+      if (isUserExist.isActive === IsActive.BLOCKED) {
+        return done(null, false, { message: "User is blocked" });
+      }
+
+      const isGoogleAuthenticate = isUserExist.auths.some(
+        (providerObject) => providerObject.provider === "google"
+      );
+
+      if (isGoogleAuthenticate && !isUserExist.password) {
+        return done(null, false, {
+          message:
+            "You have authenticated through Google. Please login with Google first and set a password.",
+        });
+      }
+
+      const isPasswordMatch = await bcryptJs.compare(
+        password,
+        isUserExist.password as string
+      ); 
+
+      if (!isPasswordMatch) {
+        return done(null, false, { message: "Password is incorrect" });
+      }
+
+      // ✅ Password match হলে
+      return done(null, isUserExist);
+    } catch (error) {
+      console.error(error);
+      return done(error);
+    }
+  }
+));
 

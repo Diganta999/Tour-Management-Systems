@@ -10,9 +10,9 @@ const createUserService = async (payload: Partial<IUser>) => {
 
     const { email, password, ...rest } = payload;
     const isUserExist = await User.findOne({ email });
-    if (isUserExist) {
-        throw new AppError(statusCode.BAD_REQUEST, "user is all ready exist")
-    }
+    // if (isUserExist) {
+    //     throw new AppError(statusCode.BAD_REQUEST, "user is all ready exist")
+    // }
     const inCryptPassword = await bcryptjs.hash(password as string,Number(envVars.SLOT_ROUND));
     
     const auths: IAuthProvider = { provider: "credential", providerId: email as string }

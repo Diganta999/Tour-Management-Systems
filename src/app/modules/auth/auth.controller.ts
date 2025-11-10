@@ -17,11 +17,15 @@ const authLoginController = catchAsync(async(req:Request,res:Response,next:NextF
     // const user = await AuthService.authLoginService(req.body)
 
     passport.authenticate("local",async(err:any,user:any,info:any)=>{
+        
         if(err){
-          return next(err)
+          return next(new AppError(404,err))
+        }
+        if(!user){
+            return next(new AppError(404,info.message))
         }
       const createToken= await createUserToken(user)
-      const {password:pass,...rest}=user.toObject()
+      const {password:pass,...rest}=user.toObject();
       setAuthCookie(res,createToken)
          sendResponse(res,{
         statusCode:statusCode.OK,
