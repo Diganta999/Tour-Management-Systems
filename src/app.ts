@@ -11,6 +11,8 @@ import "./app/config/passport"
 
 
 const app = express()
+// Passport js
+
 app.use(expressSession({
     secret:envVars.EXPRESS_SESSION_SECRET,
     resave:false,
@@ -18,8 +20,11 @@ app.use(expressSession({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+// jwt
 app.use(cookieParser())
+// express
 app.use(express.json())
+// cors
 app.use(cors())
 
 
