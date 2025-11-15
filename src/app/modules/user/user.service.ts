@@ -15,10 +15,10 @@ const createUserService = async (payload: Partial<IUser>) => {
     }
     const inCryptPassword = await bcryptjs.hash(password as string,Number(envVars.SLOT_ROUND));
     
-    const auths: IAuthProvider = { provider: "credential", providerId: email as string }
+    const authProvider: IAuthProvider = { provider: "credential", providerId: email as string }
     const user = await User.create({
         email,
-        auths,
+        auths:[authProvider],
         password: inCryptPassword,
         ...rest
     })

@@ -20,10 +20,10 @@ export interface IUser {
     name:string;
     email:string;
     password?:string;
-    phone?:string;
+    phone?:string; 
     picture?:string;
     address?:string;
-    isDeleted?:string;
+    isDeleted?:string; 
     isActive?:IsActive;
     isVerified?:boolean;
     role:Role;

@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import AppError from "../../errorHelpers/AppError";
 import {  IUser } from "../user/user.interface";
 import { User } from "../user/user.model";
 import statusCode from "http-status-codes"
 import bcrypt from "bcryptjs"
 import { createNewAccessTokenWithRefreshToken, createUserToken } from "../../utils/userTokens";
+import { JwtPayload } from "jsonwebtoken";
+import { envVars } from "../../config/env";
+
 
 
 const authLoginService= async(payload:Partial<IUser>)=>{
@@ -37,8 +41,28 @@ const getNewAccessToken= async(refreshToken:string)=>{
     }
 
 }
+const resetPasswordService= async(decodedToken:JwtPayload,oldPassword:string,newPassword:string)=>{
+     
+   const user = await User.findById(decodedToken.userId)  ;
+   
+
+   const isPasswordMatched =await  bcrypt.compare(oldPassword,user!.password as string)
+   if(!isPasswordMatched){
+    throw new AppError(statusCode.FORBIDDEN,"password dost not match !!!!!")
+   }
+   const newHashPassword = await bcrypt.hash(newPassword,Number(envVars.SLOT_ROUND));
+   user!.password=newHashPassword;
+   await user?.save()
+
+    
+    return {
+       
+    }
+
+}
 
 export const AuthService={
     authLoginService,
-    getNewAccessToken
+    getNewAccessToken,
+    resetPasswordService
 }

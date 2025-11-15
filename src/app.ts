@@ -4,11 +4,27 @@ import { router } from "./app/router"
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler"
 import notFound from "./app/middleware/notFound"
 import cookieParser from "cookie-parser"
+import passport from "passport"
+import expressSession from "express-session"
+import { envVars } from "./app/config/env"
+import "./app/config/passport"
 
 
 const app = express()
+// Passport js
+
+app.use(expressSession({
+    secret:envVars.EXPRESS_SESSION_SECRET,
+    resave:false,
+    saveUninitialized:false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+// jwt
 app.use(cookieParser())
+// express
 app.use(express.json())
+// cors
 app.use(cors())
 
 
