@@ -12,7 +12,11 @@ const moduleRoutes = [
     },{
         path:"/auth",
         route:AuthRoute
-    }
+    },
+    // {
+    //     path:"/tour",
+    //     router:
+    // }
 ]
 
 moduleRoutes.forEach((route)=>{
