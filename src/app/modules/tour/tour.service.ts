@@ -48,12 +48,8 @@ const updateTourTypeService = async (id: string, data: Partial<ITourTypes>) => {
 }
 
 
-// tour management 
 
 
-
-
- 
 
 const createTourService=async(payload:Partial<ITour>)=>{
   const existingTour = await Tour.findOne({ title: payload.title });
