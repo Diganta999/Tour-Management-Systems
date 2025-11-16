@@ -19,7 +19,7 @@ const retrieveAllDivisionController= catchAsync(async(req:Request,res:Response,n
     sendResponse(res,{
             success:true,
             statusCode:statusCode.OK,
-            message:"Division create successfully",
+            message:"All division retrieve successfully",
             data:allDivision.allDivision,
             meta:{
                 total:allDivision.total
@@ -27,8 +27,20 @@ const retrieveAllDivisionController= catchAsync(async(req:Request,res:Response,n
 
           })
 })
+const updateDivisionController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+    const id = req.params.id;
+    const data = req.body;
+    const updateDivision = await DivisionService.updateDivisionService(id,data);
+    sendResponse(res,{
+            success:true,
+            statusCode:statusCode.OK,
+            message:"Division update successfully",
+            data:updateDivision
+          })
+})
 
 export const DivisionController ={
     createDivisionController,
-    retrieveAllDivisionController
+    retrieveAllDivisionController,
+    updateDivisionController
 }
