@@ -10,6 +10,14 @@ const createDivisionService = async (payload: Partial<IDivision>) => {
         throw new AppError(statusCode.BAD_REQUEST, "A Division with this name already exist")
     }
 
+    // const baseSlug = payload.name?.toLowerCase().split(" ").join("-");
+    // let slug = `${baseSlug}-division`;
+    // let count =0;
+    // while(await Division.exists({slug})){
+    //     slug = `${slug}-${count++}`
+    // }
+    // payload.slug=slug
+
     const division = await Division.create(payload)
     return division;
 
@@ -21,6 +29,13 @@ const retrieveAllDivisionService = async () => {
     return {
         allDivision,
         total
+    }
+}
+const retrieveSingleDivisionServices = async (slug:string) => {
+    const division = await Division.findOne({slug});
+    
+    return {
+        division 
     }
 }
 
@@ -42,6 +57,15 @@ const updateDivisionService = async (id: string, data: Partial<IDivision>) => {
     if(!isDivisionExist){
         throw new AppError(statusCode.BAD_REQUEST, "Division not found.")
     }
+    // if(data.name){
+    //     const baseSlug = data.name?.toLowerCase().split(" ").join("-");
+    //         let slug = `${baseSlug}-tour`;
+    //         let count = 0 ;
+    //         while(await Division.exists({slug})){
+    //           slug = `${slug}-${count++}`
+    //         }
+    //         data.slug = slug
+    // }
 
     const divisionUpdate = await  Division.findByIdAndUpdate(id,data,{
         new:true,
@@ -52,8 +76,16 @@ const updateDivisionService = async (id: string, data: Partial<IDivision>) => {
 
 }
 
+
+ const deleteDivisionService = async (id:string)=>{
+                 const deleteDivision = await Division.findByIdAndDelete(id);
+                 return deleteDivision
+         }
+
 export const DivisionService = {
     createDivisionService,
     retrieveAllDivisionService,
-    updateDivisionService
+    retrieveSingleDivisionServices,
+    updateDivisionService,
+    deleteDivisionService
 }

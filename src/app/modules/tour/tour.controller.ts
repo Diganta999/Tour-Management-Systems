@@ -55,11 +55,64 @@ const createTourController=catchAsync(async(req: Request, res: Response, next: N
        })
 })
 
+const retrieveAllTourController=catchAsync(async(req: Request, res: Response, next: NextFunction) => {
+   const query = req.query;
+      const tour = await TourService.retrieveAllTourService(query as Record<string,string>)
+       sendResponse(res,{
+         success:true,
+            statusCode:statusCode.OK,
+            message:"retrieveAll Tour successfully",
+            data:tour.tour,
+            meta:{
+               total:tour.total
+            }
+       })
+})
 
+const retrieveOneTourController=catchAsync(async(req: Request, res: Response, next: NextFunction) => {
+   const slug = req.params.slug
+      const tour = await TourService.retrieveOneTourService(slug)
+       sendResponse(res,{
+         success:true,
+            statusCode:statusCode.OK,
+            message:"retrieveOne Tour successfully",
+            data:tour,
+            
+       })
+})
 
+const updateTourController =catchAsync(async(req: Request, res: Response, next: NextFunction) => {
+   const id = req.params.id;
+   const data = req.body;
+      const tour = await TourService.updateTourService(id,data);
+       sendResponse(res,{
+         success:true,
+            statusCode:statusCode.OK,
+            message:"Tour update successfully",
+            data:tour,
+            
+       })
+}) 
+
+const deleteTourController = catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
+   const id = req.params.id;
+   const tour = await TourService.deleteTourService(id)
+
+   sendResponse(res,{
+         success:true,
+            statusCode:statusCode.OK,
+            message:"Tour delete successfully",
+            data:tour,
+            
+       })
+})
 export const TourController ={
       createTourTypeController,
       retrieveAllTourTypeController,
       updateTourTypeController,
-      createTourController
+      createTourController,
+      retrieveAllTourController,
+      retrieveOneTourController,
+      updateTourController,
+      deleteTourController
 }

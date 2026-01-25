@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 
 import { Server } from "http"
 import mongoose from "mongoose";
@@ -29,7 +30,7 @@ const startServer = async () => {
    await seedSuperAdmin()
 })()
 
-process.on("SIGINT",()=>{
+process.on("SIGTERM",()=>{
      console.log("SIGINT signal caught ! Server Shouting down .......... ")
      if(server){
         server.close(()=>{
@@ -56,6 +57,16 @@ process.on("uncaughtException",(err)=>{
      }
      process.exit(1)
 })
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,1 @@
+export const searchingField = ["title","description","location"] 

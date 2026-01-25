@@ -27,6 +27,17 @@ const retrieveAllDivisionController= catchAsync(async(req:Request,res:Response,n
 
           })
 })
+const retrieveSingleDivisionController= catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+  console.log(req.params.slug)
+    const oneDivision = await DivisionService.retrieveSingleDivisionServices(req.params.slug);
+    sendResponse(res,{
+            success:true,
+            statusCode:statusCode.OK,
+            message:"Division retrieve successfully",
+            data:oneDivision
+
+          })
+})
 const updateDivisionController = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
     const id = req.params.id;
     const data = req.body;
@@ -38,9 +49,21 @@ const updateDivisionController = catchAsync(async(req:Request,res:Response,next:
             data:updateDivision
           })
 })
+const deleteDivisionController=catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
+  const id = req.params.id;
+  const data = await DivisionService.deleteDivisionService(id);
+   sendResponse(res,{
+            success:true,
+            statusCode:statusCode.OK,
+            message:"Division Delete successfully",
+            data:data
+          })
+})
 
 export const DivisionController ={
     createDivisionController,
     retrieveAllDivisionController,
-    updateDivisionController
+    retrieveSingleDivisionController,
+    updateDivisionController,
+    deleteDivisionController
 }

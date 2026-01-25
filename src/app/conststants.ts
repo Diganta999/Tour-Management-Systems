@@ -1,0 +1,1 @@
+export const exclusiveField = ["searchTerm","sort","fields","page","limit"]
