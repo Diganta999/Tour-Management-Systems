@@ -18,7 +18,7 @@ const createUserController = catchAsync(async (req: Request, res: Response, next
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "user create successfully",
+    message: "user create successfully", 
     data: user
   })
 });
